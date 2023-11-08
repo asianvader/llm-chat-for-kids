@@ -2,11 +2,11 @@
 
 import { useChat } from "ai/react";
 
-export default function Chat() {
+export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
 
   return (
-    <div className="mx-auto w-full max-w-md py-24 flex flex-col stretch">
+    <div>
       {messages.map((m) => (
         <div key={m.id}>
           {m.role === "user" ? "User: " : "AI: "}
@@ -15,14 +15,14 @@ export default function Chat() {
       ))}
 
       <form onSubmit={handleSubmit}>
-        <label>
-          Say something...
+
           <input
-            className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
+            type="text"
             value={input}
             onChange={handleInputChange}
+            placeholder="Type you message here"
+            className="bg-transparent focus:outline-none flex-1"
           />
-        </label>
         <button type="submit">Send</button>
       </form>
     </div>
