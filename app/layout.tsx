@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Playpen_Sans } from "@next/font/google";
 import "./globals.css";
 import Login from "@/components/Login";
 // import { SessionProvider } from "@/components/SessionProvider";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
 
-const inter = Inter({ subsets: ["latin"] });
+const playpenSans = Playpen_Sans({subsets: ["latin"]});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,7 +20,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(options);
   return (
-    <html lang="en">
+    <html lang="en" className={playpenSans.className}>
       <body>{!session ? <Login /> : <div className="">{children}</div>}</body>
     </html>
   );
