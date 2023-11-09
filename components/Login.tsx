@@ -20,7 +20,7 @@ export default function Login() {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10 text-2xl"
         onClick={() => signIn("google")}
       >
-        Sign in with your Google account
+        Sign in
       </button>
     </div>
   );
