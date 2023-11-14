@@ -1,12 +1,15 @@
 "use client";
 
 import { useChat } from "ai/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-
+  const router = useRouter()
   return (
-    <div>
+    <>
+     {router.push("/addProfile")}
+    {/* <div>
       {messages.map((m) => (
         <div key={m.id}>
           {m.role === "user" ? "User: " : "AI: "}
@@ -25,6 +28,7 @@ export default function Home() {
           />
         <button type="submit">Send</button>
       </form>
-    </div>
+    </div> */}
+    </>
   );
 }
