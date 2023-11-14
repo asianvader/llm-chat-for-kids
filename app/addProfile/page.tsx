@@ -1,5 +1,9 @@
 "use client";
 
+import { db } from "@/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 type formProps = {
@@ -12,6 +16,9 @@ const AddProfile = () => {
   const [age, setAge] = useState<string>("");
   const [errors, setErrors] = useState<formProps>({});
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  const { data: session} = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     validateForm();
@@ -39,13 +46,25 @@ const AddProfile = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isFormValid) {
+  if (isFormValid) {
       console.log("Form is valid");
+      const doc = await addDoc(
+        collection(db, 'users', session?.user?.email!, "profiles"),{
+        name: name,
+        age: age,
+        createdAt: serverTimestamp(),
+      }
+      );
+      router.push(`/profiles`)
     } else {
       console.log("Form is invalid");
     }
+    
+
+
+  
   };
   return (
     <div className="w-full max-w-xs">
