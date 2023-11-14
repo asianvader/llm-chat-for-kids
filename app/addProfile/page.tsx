@@ -26,6 +26,8 @@ const AddProfile = () => {
 
     if (!age) {
       errors.age = "Age is required";
+    } else if (!/^\d+$/.test(age)) {
+      errors.age = "Age must be a number";
     }
 
     setErrors(errors);
