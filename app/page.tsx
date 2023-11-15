@@ -1,30 +1,18 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useRouter } from "next/navigation";
 import FetchProfiles from "@/components/FetchProfiles";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-  const router = useRouter();
-
-  const handleOnClick = () => {
-    router.push("/addProfile");
-  };
 
   return (
     <div
-      className="bg-fixed bg-repeat h-screen"
+      className="bg-fixed bg-repeat pb-32 h-screen"
       style={{ backgroundImage: `url("/background.png")` }}
     >
-      <FetchProfiles />
-      <div className="flex items-center justify-center mt-6">
-        <button
-          className=" bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 "
-          onClick={handleOnClick}
-        >
-          Add new profile
-        </button>
+      <div>
+        <FetchProfiles />
       </div>
 
       {/* <div>
