@@ -3,6 +3,7 @@
 import { useChat } from "ai/react";
 import { useRouter } from "next/navigation";
 import FetchProfiles from "@/components/FetchProfiles";
+import backgroundImage from "../public/background.png";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
@@ -13,7 +14,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="bg-fixed bg-repeat" style={{backgroundImage: `url("/background.png")`}}>
       <FetchProfiles />
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 " onClick={handleOnClick}>
         Add new profile
@@ -40,6 +41,6 @@ export default function Home() {
         <button type="submit">Send</button>
       </form>
     </div> */}
-    </>
+    </div>
   );
 }

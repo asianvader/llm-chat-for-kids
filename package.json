@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.7",
     "ai": "^2.2.20",
     "firebase": "^10.6.0",
     "langchain": "^0.0.179",
@@ -16,7 +17,8 @@
     "next-auth": "^4.24.4",
     "openai": "^4.14.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",

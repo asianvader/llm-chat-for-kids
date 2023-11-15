@@ -5,6 +5,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 type formProps = {
   name?: string;
@@ -50,14 +51,16 @@ function AddProfileForm() {
       e.preventDefault();
     if (isFormValid) {
         console.log("Form is valid");
+        const uuid = uuidv4();
         const doc = await addDoc(
           collection(db, 'users', session?.user?.email!, "profiles"),{
           name: name,
           age: age,
           createdAt: serverTimestamp(),
+          id: uuid
         }
         );
-        router.push(`/profiles`)
+        router.push("/")
       } else {
         console.log("Form is invalid");
       }

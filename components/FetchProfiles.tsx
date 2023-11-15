@@ -8,14 +8,17 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "@/firebase";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 function FetchProfiles() {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true); // New state for loading indicator
   const { data: session } = useSession();
+  const router = useRouter();
+  
 
   useEffect(() => {
     console.log(session);
@@ -55,12 +58,19 @@ function FetchProfiles() {
     fetchData();
   }, [session]);
 
+  const cardClickHandler = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    console.log(e.currentTarget);
+    const profileId = (e.target as HTMLDivElement).dataset.profileId;
+    console.log(profileId);
+    router.push(`/profile/${profileId}`);
+
+  }
   return (
     <>
       {loading ? (
         <div>Loading...</div>
       ) : userData ? (
-        <div className="mt-8">
+        <div className="pt-8">
           <h2 className="p-5 text-center font-bold text-5xl">Welcome Back!</h2>
           <p className="mb-5 text-center font-bold text-3xl">
             Choose a profile
@@ -68,7 +78,7 @@ function FetchProfiles() {
           <div className="grid grid-cols-3 gap-10 ml-10 mr-10 place-items-center">
             {userData.map((profile: any, index: number) => (
               <div
-                className="text-center border-2 box-border min-w-fit min-h-fit pt-5 rounded-lg shadow-md pl-4 pr-4 pb-4"
+                className="text-center border-4 border-zinc-500/50 box-border min-w-fit min-h-fit pt-5 rounded-xl shadow-lg pl-4 pr-4 pb-4 bg-white" 
                 key={profile.name}
               >
                 <div className="grid place-items-center">
@@ -77,6 +87,9 @@ function FetchProfiles() {
                     width={160}
                     height={160}
                     alt="avatar"
+                    onClick={cardClickHandler}
+                    className="cursor-pointer focus:transition-opacity hover:opacity-80"
+                    data-profile-id={profile.id}
                   />
                 </div>
                 <div className="font-bold text-3xl flex-wrap">
