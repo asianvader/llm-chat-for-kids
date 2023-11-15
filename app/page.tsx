@@ -3,7 +3,6 @@
 import { useChat } from "ai/react";
 import { useRouter } from "next/navigation";
 import FetchProfiles from "@/components/FetchProfiles";
-import backgroundImage from "../public/background.png";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
@@ -11,16 +10,23 @@ export default function Home() {
 
   const handleOnClick = () => {
     router.push("/addProfile");
-  }
+  };
 
   return (
-    <div className="bg-fixed bg-repeat" style={{backgroundImage: `url("/background.png")`}}>
+    <div
+      className="bg-fixed bg-repeat h-screen"
+      style={{ backgroundImage: `url("/background.png")` }}
+    >
       <FetchProfiles />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 " onClick={handleOnClick}>
-        Add new profile
-      </button>
+      <div className="flex items-center justify-center mt-6">
+        <button
+          className=" bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 "
+          onClick={handleOnClick}
+        >
+          Add new profile
+        </button>
+      </div>
 
-      {/* {router.push("/addProfile")} */}
       {/* <div>
       {messages.map((m) => (
         <div key={m.id}>
