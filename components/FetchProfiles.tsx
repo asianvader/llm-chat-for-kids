@@ -5,9 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AddProfileButton from "./AddProfileButton";
 import { fetchProfileData } from "@/app/utils/getProfiles";
+import { DocumentData } from "firebase-admin/firestore";
 
 function FetchProfiles() {
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [hideEl, setHideEl] = useState("md:hidden");
   const { data: session } = useSession();
