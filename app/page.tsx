@@ -2,6 +2,7 @@
 
 import { useChat } from "ai/react";
 import FetchProfiles from "@/components/FetchProfiles";
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
@@ -11,9 +12,8 @@ export default function Home() {
       className="bg-fixed bg-repeat pb-32 h-screen"
       style={{ backgroundImage: `url("/background.png")` }}
     >
-      <div>
-        <FetchProfiles />
-      </div>
+      <FetchProfiles />
+
 
       {/* <div>
       {messages.map((m) => (

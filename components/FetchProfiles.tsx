@@ -1,18 +1,10 @@
 "use client";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-} from "firebase/firestore";
-import { db } from "@/firebase";
-import { useState, useEffect, use, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AddProfileButton from "./AddProfileButton";
+import { fetchProfileData } from "@/app/utils/getProfiles";
 
 function FetchProfiles() {
   const [userData, setUserData] = useState<any>(null);
@@ -22,42 +14,21 @@ function FetchProfiles() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(session);
-    const fetchData = async () => {
-      try {
-        const profilesCollectionRef = collection(
-          db,
-          "users",
-          session?.user?.email!,
-          "profiles"
-        );
-        const orderedQuery = query(
-          profilesCollectionRef,
-          orderBy("createdAt", "asc")
-        );
-        const userProfiles = await getDocs(orderedQuery);
-        console.log(userProfiles);
-
-        if (!userProfiles.empty) {
-          console.log("User has profiles");
-          const profileDetails = userProfiles.docs.map((doc) => doc.data());
-          console.log(profileDetails);
-          setUserData(profileDetails);
-        } else {
-          console.log("No profiles");
-          setUserData(null);
-          setHideEl("");
-        }
-
-        // Set loading to false after data is fetched
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Set loading to false on error
-        setLoading(false);
+    fetchProfileData(session).then((data) => {
+      console.log(data);
+      if (data && !data.empty) {
+        const profileDetails = data.docs.map((doc) => doc.data());
+        console.log(profileDetails);
+        setUserData(profileDetails);
+      } else {
+        console.log("No profiles");
+        setUserData(null);
+        setHideEl("");
       }
-    };
-    fetchData();
+
+      // Set loading to false after data is fetched
+      setLoading(false);
+    });
   }, [session]);
 
   const cardClickHandler = (
