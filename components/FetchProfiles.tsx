@@ -1,14 +1,15 @@
 "use client";
-import { useState, useEffect, MouseEvent, use } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AddProfileButton from "./AddProfileButton";
 import { fetchProfileData } from "@/app/utils/getProfiles";
+import { useUserDataContext } from "@/app/Context/store";
 import { DocumentData } from "firebase-admin/firestore";
-
+  
 function FetchProfiles() {
-  const [userData, setUserData] = useState<DocumentData | null>(null);
+  const { userData, setUserData } = useUserDataContext();
   const [loading, setLoading] = useState(true);
   const [hideEl, setHideEl] = useState("md:hidden");
   const { data: session } = useSession();
@@ -22,6 +23,7 @@ function FetchProfiles() {
         const profileDetails = data.docs.map((doc) => doc.data());
         console.log(profileDetails);
         setUserData(profileDetails);
+        sessionStorage.setItem("userData", JSON.stringify(profileDetails));
       } else {
         console.log("No profiles");
         setUserData(null);
@@ -73,7 +75,7 @@ function FetchProfiles() {
             Choose a profile
           </p>
           <div className="grid grid-cols-3 gap-10 ml-10 mr-10 place-items-center">
-            {userData.map((profile: any, index: number) => (
+            {userData.map((profile: DocumentData, index: number) => (
               <div
                 className="text-center border-4 border-zinc-500/50 box-border min-w-fit min-h-fit pt-5 rounded-xl shadow-lg pl-4 pr-4 pb-4 bg-white"
                 key={profile.name}

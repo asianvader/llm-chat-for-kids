@@ -15,20 +15,20 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { set } from "firebase/database";
 import { DocumentData } from "firebase-admin/firestore";
+import { useUserDataContext } from "@/app/Context/store";
 
 type EditProfileModalProps = {
   user: DocumentData[];
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
-  setUserData: React.Dispatch<SetStateAction<DocumentData[] | null>>;
 };
 
 const EditProfileModal: FC<EditProfileModalProps> = ({
   user,
   showModal,
   setShowModal,
-  setUserData,
 }) => {
+  const { setUserData } = useUserDataContext();
   const [profile, setProfile] = useState<DocumentData>(user[0]);
   const [name, setName] = useState<string>(profile.name);
   const [age, setAge] = useState<string>(profile.age);
@@ -106,6 +106,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
               return user;
             }
           });
+          sessionStorage.setItem("userData", JSON.stringify(updatedUserData));
           return updatedUserData;
         });
 
