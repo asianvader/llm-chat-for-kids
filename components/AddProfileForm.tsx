@@ -5,7 +5,6 @@ import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/fi
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 function AddProfileForm() {
   const [name, setName] = useState<string>("");

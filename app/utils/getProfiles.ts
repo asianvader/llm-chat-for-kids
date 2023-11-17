@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export const fetchProfileData = async (session: any) => {
@@ -9,6 +9,7 @@ export const fetchProfileData = async (session: any) => {
       session?.user?.email!,
       "profiles"
     );
+
     const orderedQuery = query(
       profilesCollectionRef,
       orderBy("createdAt", "asc")

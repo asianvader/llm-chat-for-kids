@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent, use } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,8 +15,9 @@ function FetchProfiles() {
   const router = useRouter();
 
   useEffect(() => {
+    if (session) {
     fetchProfileData(session).then((data) => {
-      console.log(data);
+      console.log('fetching...')
       if (data && !data.empty) {
         const profileDetails = data.docs.map((doc) => doc.data());
         console.log(profileDetails);
@@ -30,6 +31,7 @@ function FetchProfiles() {
       // Set loading to false after data is fetched
       setLoading(false);
     });
+  }
   }, [session]);
 
   const cardClickHandler = (
