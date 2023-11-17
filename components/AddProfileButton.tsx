@@ -1,11 +1,15 @@
-import React from "react";
 import { useRouter } from "next/navigation";
+import { FC } from "react";
 
-function AddProfileButton() {
+type AddProfileButtonProps = {
+  setShowModal: (showModal: boolean) => void;
+};
+const AddProfileButton: FC<AddProfileButtonProps> = ({ setShowModal }) => {
   const router = useRouter();
 
   const handleOnClick = () => {
-    router.push("/addProfile");
+    // router.push("/addProfile");
+    setShowModal(true);
   };
   return (
     <div className="flex items-center justify-center pt-6 ">
@@ -17,6 +21,6 @@ function AddProfileButton() {
       </button>
     </div>
   );
-}
+};
 
 export default AddProfileButton;

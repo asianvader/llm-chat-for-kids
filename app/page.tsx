@@ -14,7 +14,6 @@ export default function Home() {
     >
       <FetchProfiles />
 
-
       {/* <div>
       {messages.map((m) => (
         <div key={m.id}>

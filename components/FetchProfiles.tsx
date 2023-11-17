@@ -7,33 +7,35 @@ import AddProfileButton from "./AddProfileButton";
 import { fetchProfileData } from "@/app/utils/getProfiles";
 import { useUserDataContext } from "@/app/Context/store";
 import { DocumentData } from "firebase-admin/firestore";
-  
+import AddProfileForm from "./AddProfileForm";
+
 function FetchProfiles() {
   const { userData, setUserData } = useUserDataContext();
   const [loading, setLoading] = useState(true);
   const [hideEl, setHideEl] = useState("md:hidden");
   const { data: session } = useSession();
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (session) {
-    fetchProfileData(session).then((data) => {
-      console.log('fetching...')
-      if (data && !data.empty) {
-        const profileDetails = data.docs.map((doc) => doc.data());
-        console.log(profileDetails);
-        setUserData(profileDetails);
-        sessionStorage.setItem("userData", JSON.stringify(profileDetails));
-      } else {
-        console.log("No profiles");
-        setUserData(null);
-        setHideEl("");
-      }
+      fetchProfileData(session).then((data) => {
+        console.log("fetching...");
+        if (data && !data.empty) {
+          const profileDetails = data.docs.map((doc) => doc.data());
+          console.log(profileDetails);
+          setUserData(profileDetails);
+          sessionStorage.setItem("userData", JSON.stringify(profileDetails));
+        } else {
+          console.log("No profiles");
+          setUserData(null);
+          setHideEl("");
+        }
 
-      // Set loading to false after data is fetched
-      setLoading(false);
-    });
-  }
+        // Set loading to false after data is fetched
+        setLoading(false);
+      });
+    }
   }, [session]);
 
   const cardClickHandler = (
@@ -97,7 +99,8 @@ function FetchProfiles() {
               </div>
             ))}
           </div>
-          <AddProfileButton />
+          <AddProfileButton setShowModal={setShowModal} />
+          <AddProfileForm showModal={showModal} setShowModal={setShowModal} />
         </div>
       ) : (
         <div className={`pt-8 ${hideEl}`}>
@@ -105,7 +108,8 @@ function FetchProfiles() {
           <p className="mb-5 text-center font-bold text-3xl">
             Please create a profile
           </p>
-          <AddProfileButton />
+          <AddProfileButton setShowModal={setShowModal} />
+          <AddProfileForm showModal={showModal} setShowModal={setShowModal} />
         </div>
       )}
     </div>
