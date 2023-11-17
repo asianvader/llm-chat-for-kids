@@ -1,19 +1,8 @@
 "use client";
-import { FC, FormEvent, SetStateAction, useEffect, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import { db } from "@/firebase";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { set } from "firebase/database";
 import { DocumentData } from "firebase-admin/firestore";
 import { useUserDataContext } from "@/app/Context/store";
 
@@ -120,7 +109,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
   };
   return (
     <div className={`${modalClasses} bg-gray-800 bg-opacity-75`}>
-      <div className="bg-white p-8 rounded shadow-lg">
+      <div className="bg-white p-8 rounded shadow-lg w-96">
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit}
@@ -135,7 +124,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             First name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-w-full"
             type="text"
             name="name"
             id="name"
@@ -146,6 +135,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           {errors.name && (
             <p className="text-red-500 text-xs italic">{errors.name}</p>
           )}
+
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="age"
@@ -153,7 +143,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             Age
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline min-w-full"
             type="text"
             name="age"
             id="age"
@@ -168,7 +158,13 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"
             type="submit"
           >
-            Submit
+            Update
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 ml-4"
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
           </button>
         </form>
       </div>
