@@ -2,7 +2,7 @@
 
 import { useUserDataContext } from "@/app/Context/store";
 import { db } from "@/firebase";
-import { set } from "firebase/database";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   addDoc,
   collection,
@@ -12,7 +12,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { FC, FormEvent, useEffect, useState } from "react";
 
 type AddProfileModalProps = {
@@ -38,6 +37,25 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
     validateForm();
   }, [name, age]);
 
+  useEffect(() => {
+    // Attach the event listener when the modal is shown
+    if (showModal) {
+      document.addEventListener("click", closeModalOnOverlayClick);
+    }
+
+    // Detach the event listener when the modal is hidden or component unmounts
+    return () => {
+      document.removeEventListener("click", closeModalOnOverlayClick);
+    };
+  }, [showModal]);
+
+  const closeModalOnOverlayClick = (e: MouseEvent) => {
+    // Check if the click event is on the overlay
+    if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
+      setShowModal(false);
+    }
+  };
+
   const validateForm = () => {
     let errors: formProps = {};
 
@@ -61,8 +79,9 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    console.log(e.currentTarget);
     e.preventDefault();
-    if (isFormValid) {
+    if (isFormValid && e.currentTarget.id !== "cancel") {
       console.log("Form is valid");
       const document = await addDoc(
         collection(db, "users", session?.user?.email!, "profiles"),
@@ -89,19 +108,37 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
         if (docSnapshot.exists()) {
           const data = docSnapshot.data();
           console.log("Document data:", data);
-          const updatedUserData = [...userData!, data];
-          setUserData(updatedUserData);
-          sessionStorage.setItem("userData", JSON.stringify(updatedUserData));
+          if (userData) {
+            const updatedUserData = [...userData, data];
+            setUserData(updatedUserData);
+            sessionStorage.setItem(
+              "userData",
+              JSON.stringify(updatedUserData)
+            );
+          } else {
+            console.log("No profiles");
+            setUserData([data]);
+          }
         }
       });
       setShowModal(false);
     } else {
-      console.log("Form is invalid");
+      console.log("Form is invalid or cancel");
     }
   };
   return (
     <div className={`${modalClasses} bg-gray-800 bg-opacity-75`}>
       <div className="bg-white p-8 rounded shadow-lg w-96">
+        <div className="relative">
+          <button
+            className="absolute top-0 right-0"
+            onClick={() => setShowModal(false)}
+          >
+            {" "}
+            <XMarkIcon className="h-10 w-10 text-red-600 hover:text-red-600/80" />
+          </button>
+        </div>
+
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit}
@@ -151,7 +188,7 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"
             type="submit"
           >
-            Submit
+            Add
           </button>
         </form>
       </div>
