@@ -5,13 +5,16 @@ import { DocumentData } from "firebase-admin/firestore";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import EditProfileModal from "./EditProfileModal";
 import { useUserDataContext } from "@/app/Context/store";
+import CancelProfileModal from "./DeleteProfileModal";
+import { set } from "firebase/database";
 
 export function EditProfile() {
   // const [userData, setUserData] = useState<DocumentData[] | null>(null);
   const { userData, setUserData } = useUserDataContext();
   const [profile, setProfile] = useState<DocumentData[] | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
   useEffect(() => {
     console.log(userData, "useeffect");
@@ -47,13 +50,13 @@ export function EditProfile() {
     console.log("Delete button clicked", e.currentTarget.id);
     if (userData) {
       const filteredProfile = userData?.filter(
-        (profile) => profile.id !== e.currentTarget.id
+        (profile) => profile.id === e.currentTarget.id
       );
 
       console.log(filteredProfile);
 
-      setUserData(filteredProfile);
-      sessionStorage.setItem("userData", JSON.stringify(filteredProfile));
+      setProfile(filteredProfile);
+      setShowDeleteModal(true);
     }
   };
   return (
@@ -63,6 +66,13 @@ export function EditProfile() {
           showModal={showEditModal}
           user={profile!}
           setShowModal={setShowEditModal}
+        />
+      )}
+      {showDeleteModal && (
+        <CancelProfileModal
+          showDeleteModal={showDeleteModal}
+          user={profile!}
+          setShowDeleteModal={setShowDeleteModal}
         />
       )}
       <h2>My kids</h2>

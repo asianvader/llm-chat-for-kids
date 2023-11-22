@@ -47,7 +47,6 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
       setShowModal(false);
     }
   };
-  
   useEffect(() => {
     validateForm();
   }, [name, age]);
