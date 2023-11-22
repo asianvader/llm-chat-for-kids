@@ -3,6 +3,7 @@
 import { useUserDataContext } from "@/app/Context/store";
 import { db } from "@/firebase";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import { set } from "firebase/database";
 import {
   addDoc,
   collection,
@@ -12,7 +13,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { FC, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 
 type AddProfileModalProps = {
   setShowModal: (showModal: boolean) => void;
@@ -28,12 +29,14 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
   const [age, setAge] = useState<string>("");
   const [errors, setErrors] = useState<formProps>({});
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [hideEl, setHideEl] = useState("hidden");
   const modalClasses = showModal
     ? "fixed inset-0 flex items-center justify-center"
     : "hidden";
   const { data: session } = useSession();
 
   useEffect(() => {
+    console.log("useeffect");
     validateForm();
   }, [name, age]);
 
@@ -81,7 +84,7 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     console.log(e.currentTarget);
     e.preventDefault();
-    if (isFormValid && e.currentTarget.id !== "cancel") {
+    if (isFormValid) {
       console.log("Form is valid");
       const document = await addDoc(
         collection(db, "users", session?.user?.email!, "profiles"),
@@ -111,10 +114,7 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
           if (userData) {
             const updatedUserData = [...userData, data];
             setUserData(updatedUserData);
-            sessionStorage.setItem(
-              "userData",
-              JSON.stringify(updatedUserData)
-            );
+            sessionStorage.setItem("userData", JSON.stringify(updatedUserData));
           } else {
             console.log("No profiles");
             setUserData([data]);
@@ -134,7 +134,12 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
         <div className="relative">
           <button
             className="absolute top-0 right-0"
-            onClick={() => setShowModal(false)}
+            onClick={() => {
+              setShowModal(false);
+              setAge("");
+              setName("");
+              setHideEl("hidden");
+            }}
           >
             {" "}
             <XMarkIcon className="h-10 w-10 text-red-600 hover:text-red-600/80" />
@@ -161,14 +166,19 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
             id="name"
             required
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setHideEl("");
+            }}
             placeholder="Name"
           />
           {errors.name && (
-            <p className="text-red-500 text-xs italic">{errors.name}</p>
+            <p className={`text-red-500 text-xs italic ${hideEl}`}>
+              {errors.name}
+            </p>
           )}
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 text-sm font-bold mb-2 mt-2"
             htmlFor="age"
           >
             Age
@@ -180,11 +190,16 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
             id="age"
             required
             value={age}
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => {
+              setAge(e.target.value);
+              setHideEl("");
+            }}
             placeholder="Age"
           />
           {errors.age && (
-            <p className="text-red-500 text-xs italic">{errors.age}</p>
+            <p className={`text-red-500 text-xs italic ${hideEl}`}>
+              {errors.age}
+            </p>
           )}
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"

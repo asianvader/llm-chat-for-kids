@@ -12,7 +12,7 @@ import AddProfileForm from "./AddProfileForm";
 function FetchProfiles() {
   const { userData, setUserData } = useUserDataContext();
   const [loading, setLoading] = useState(true);
-  const [hideEl, setHideEl] = useState("md:hidden");
+  const [hideEl, setHideEl] = useState("hidden");
   const { data: session } = useSession();
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
