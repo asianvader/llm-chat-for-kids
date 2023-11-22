@@ -10,9 +10,8 @@ export function EditProfile() {
   // const [userData, setUserData] = useState<DocumentData[] | null>(null);
   const { userData, setUserData } = useUserDataContext();
   const [profile, setProfile] = useState<DocumentData[] | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     console.log(userData, "useeffect");
@@ -38,16 +37,32 @@ export function EditProfile() {
       console.log(filteredProfile);
 
       setProfile(filteredProfile);
-      setShowModal(true);
+      setShowEditModal(true);
+    }
+  };
+
+  const deleteProfileHandler = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    console.log("Delete button clicked", e.currentTarget.id);
+    if (userData) {
+      const filteredProfile = userData?.filter(
+        (profile) => profile.id !== e.currentTarget.id
+      );
+
+      console.log(filteredProfile);
+
+      setUserData(filteredProfile);
+      sessionStorage.setItem("userData", JSON.stringify(filteredProfile));
     }
   };
   return (
     <div>
-      {showModal && (
+      {showEditModal && (
         <EditProfileModal
-          showModal={showModal}
+          showModal={showEditModal}
           user={profile!}
-          setShowModal={setShowModal}
+          setShowModal={setShowEditModal}
         />
       )}
       <h2>My kids</h2>
@@ -80,7 +95,11 @@ export function EditProfile() {
               >
                 <PencilIcon className="h-8 w-8 text-gray-800" />
               </button>
-              <button className="flex items-center justify-end">
+              <button
+                className="flex items-center justify-end"
+                onClick={deleteProfileHandler}
+                id={profile.id}
+              >
                 <TrashIcon className="h-8 w-8 text-red-600" />
               </button>
             </div>
