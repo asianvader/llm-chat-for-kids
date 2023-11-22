@@ -1,6 +1,11 @@
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 
+/**
+ * Fetches profile data for a given session.
+ * @param session - The session object.
+ * @returns A promise that resolves to the user profiles.
+ */
 export const fetchProfileData = async (session: any) => {
   try {
     const profilesCollectionRef = collection(

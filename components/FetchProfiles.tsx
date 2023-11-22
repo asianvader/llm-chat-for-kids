@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, MouseEvent, use } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -54,6 +54,10 @@ function FetchProfiles() {
     }
   }, [userData]);
 
+  /**
+   * Handles the click event on a card element.
+   * @param e - The mouse event object.
+   */
   const cardClickHandler = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {

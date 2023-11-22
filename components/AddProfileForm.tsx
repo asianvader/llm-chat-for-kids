@@ -3,7 +3,6 @@
 import { useUserDataContext } from "@/app/Context/store";
 import { db } from "@/firebase";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { set } from "firebase/database";
 import {
   addDoc,
   collection,
@@ -13,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 
 type AddProfileModalProps = {
   setShowModal: (showModal: boolean) => void;
@@ -52,6 +51,10 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
     };
   }, [showModal]);
 
+  /**
+   * Closes the modal when the overlay is clicked.
+   * @param {MouseEvent} e - The click event.
+   */
   const closeModalOnOverlayClick = (e: MouseEvent) => {
     // Check if the click event is on the overlay
     if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
@@ -62,6 +65,11 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
     }
   };
 
+  /**
+   * Validates the form by checking if the name and age fields are filled out correctly.
+   * If there are any errors, they will be stored in the 'errors' state object.
+   * If there are no errors, the 'isFormValid' state will be set to true.
+   */
   const validateForm = () => {
     let errors: formProps = {};
 
@@ -84,6 +92,11 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
     }
   };
 
+  /**
+   * Handles the form submission.
+   * 
+   * @param e - The form event.
+   */
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     console.log(e.currentTarget);
     e.preventDefault();

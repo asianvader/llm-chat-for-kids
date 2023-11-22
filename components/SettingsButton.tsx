@@ -9,7 +9,6 @@ function SettingsButton() {
   const settingsButtonOnClick = (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
-    console.log("Settings icon clicked");
     router.push("/accountSettings");
   };
   return (

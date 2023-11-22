@@ -6,15 +6,12 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import EditProfileModal from "./EditProfileModal";
 import { useUserDataContext } from "@/app/Context/store";
 import CancelProfileModal from "./DeleteProfileModal";
-import { set } from "firebase/database";
 
 export function EditProfile() {
-  // const [userData, setUserData] = useState<DocumentData[] | null>(null);
   const { userData, setUserData } = useUserDataContext();
   const [profile, setProfile] = useState<DocumentData[] | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
 
   useEffect(() => {
     console.log(userData, "useeffect");
@@ -27,6 +24,10 @@ export function EditProfile() {
     }
   }, []);
 
+  /**
+   * Handles the click event when the edit button is clicked.
+   * @param e The mouse event object.
+   */
   const editOnClickHandler = (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
@@ -44,6 +45,10 @@ export function EditProfile() {
     }
   };
 
+  /**
+   * Handles the delete profile action.
+   * @param e - The mouse event object.
+   */
   const deleteProfileHandler = (
     e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
@@ -52,9 +57,6 @@ export function EditProfile() {
       const filteredProfile = userData?.filter(
         (profile) => profile.id === e.currentTarget.id
       );
-
-      console.log(filteredProfile);
-
       setProfile(filteredProfile);
       setShowDeleteModal(true);
     }

@@ -1,12 +1,16 @@
 "use client";
+/**
+ * This file contains the implementation of the UserDataProvider component and the useUserDataContext hook.
+ * The UserDataProvider component is responsible for providing the user data context to its children components.
+ * The useUserDataContext hook is used to access the user data context within functional components.
+ */
 
 import {
   createContext,
   useContext,
   Dispatch,
   SetStateAction,
-  useState,
-  useEffect,
+  useState
 } from "react";
 import { DocumentData } from "firebase-admin/firestore";
 

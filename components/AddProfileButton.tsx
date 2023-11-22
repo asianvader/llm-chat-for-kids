@@ -1,14 +1,13 @@
-import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 type AddProfileButtonProps = {
   setShowModal: (showModal: boolean) => void;
 };
 const AddProfileButton: FC<AddProfileButtonProps> = ({ setShowModal }) => {
-  const router = useRouter();
-
+  /**
+   * Handles the click event for the Add Profile button.
+   */
   const handleOnClick = () => {
-    // router.push("/addProfile");
     setShowModal(true);
   };
   return (

@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { db } from "@/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";

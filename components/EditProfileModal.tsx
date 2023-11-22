@@ -41,6 +41,10 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
     };
   }, [showModal]);
 
+  /**
+   * Closes the modal when the overlay is clicked.
+   * @param {MouseEvent} e - The click event.
+   */
   const closeModalOnOverlayClick = (e: MouseEvent) => {
     // Check if the click event is on the overlay
     if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
@@ -51,6 +55,11 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
     validateForm();
   }, [name, age]);
 
+  
+  /**
+   * Validates the form by checking if the name and age fields are filled out correctly.
+   * Sets the errors state object and updates the isFormValid state based on the validation results.
+   */
   const validateForm = () => {
     let errors: formProps = {};
 
