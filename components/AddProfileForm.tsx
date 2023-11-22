@@ -121,6 +121,8 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
           }
         }
       });
+      setName("");
+      setAge("");
       setShowModal(false);
     } else {
       console.log("Form is invalid or cancel");

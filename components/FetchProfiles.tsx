@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent, use } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ function FetchProfiles() {
   const { data: session } = useSession();
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [gridColsClass, setGridColsClass] = useState("");
 
   useEffect(() => {
     if (session) {
@@ -25,6 +26,7 @@ function FetchProfiles() {
           const profileDetails = data.docs.map((doc) => doc.data());
           console.log(profileDetails);
           setUserData(profileDetails);
+
           sessionStorage.setItem("userData", JSON.stringify(profileDetails));
         } else {
           console.log("No profiles");
@@ -37,6 +39,20 @@ function FetchProfiles() {
       });
     }
   }, [session]);
+
+  useEffect(() => {
+    if (userData?.length === 1) {
+      setGridColsClass("grid-cols-1");
+    } else if (userData?.length === 2) {
+      console.log("2");
+      setGridColsClass("grid-cols-2 sm:grid-cols-1 md:grid-cols-2");
+    } else if (userData?.length! >= 2) {
+      console.log("3");
+      setGridColsClass("grid-cols-3 sm:grid-cols-1 md:grid-cols-3");
+    } else {
+      setGridColsClass("grid-cols-1");
+    }
+  }, [userData]);
 
   const cardClickHandler = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -76,7 +92,9 @@ function FetchProfiles() {
           <p className="mb-5 text-center font-bold text-3xl">
             Choose a profile
           </p>
-          <div className="grid grid-cols-3 gap-10 ml-10 mr-10 place-items-center">
+          <div
+            className={`grid ${gridColsClass} gap-10 ml-10 mr-10 place-items-center`}
+          >
             {userData.map((profile: DocumentData, index: number) => (
               <div
                 className="text-center border-4 border-zinc-500/50 box-border min-w-fit min-h-fit pt-5 rounded-xl shadow-lg pl-4 pr-4 pb-4 bg-white"
