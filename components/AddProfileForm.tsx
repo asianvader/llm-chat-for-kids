@@ -56,6 +56,9 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
     // Check if the click event is on the overlay
     if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
       setShowModal(false);
+      setAge("");
+      setName("");
+      setHideEl("hidden");
     }
   };
 
