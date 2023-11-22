@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect, MouseEvent } from "react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { fetchProfileData } from "@/app/utils/getProfiles";
 import { DocumentData } from "firebase-admin/firestore";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import EditProfileModal from "./EditProfileModal";
@@ -15,7 +12,7 @@ export function EditProfile() {
   const [profile, setProfile] = useState<DocumentData[] | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [hideEl, setHideEl] = useState("md:hidden");
+
 
   useEffect(() => {
     console.log(userData, "useeffect");

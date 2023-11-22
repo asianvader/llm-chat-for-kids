@@ -5,6 +5,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { DocumentData } from "firebase-admin/firestore";
 import { useUserDataContext } from "@/app/Context/store";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 type EditProfileModalProps = {
   user: DocumentData[];
@@ -28,6 +29,25 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
     ? "fixed inset-0 flex items-center justify-center"
     : "hidden";
 
+  useEffect(() => {
+    // Attach the event listener when the modal is shown
+    if (showModal) {
+      document.addEventListener("click", closeModalOnOverlayClick);
+    }
+
+    // Detach the event listener when the modal is hidden or component unmounts
+    return () => {
+      document.removeEventListener("click", closeModalOnOverlayClick);
+    };
+  }, [showModal]);
+
+  const closeModalOnOverlayClick = (e: MouseEvent) => {
+    // Check if the click event is on the overlay
+    if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
+      setShowModal(false);
+    }
+  };
+  
   useEffect(() => {
     validateForm();
   }, [name, age]);
@@ -110,6 +130,17 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
   return (
     <div className={`${modalClasses} bg-gray-800 bg-opacity-75`}>
       <div className="bg-white p-8 rounded shadow-lg w-96">
+        <div className="relative">
+          <button
+            className="absolute top-0 right-0"
+            onClick={() => {
+              setShowModal(false);
+            }}
+          >
+            {" "}
+            <XMarkIcon className="h-10 w-10 text-red-600 hover:text-red-600/80" />
+          </button>
+        </div>
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit}
@@ -159,12 +190,6 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             type="submit"
           >
             Update
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6 ml-4"
-            onClick={() => setShowModal(false)}
-          >
-            Cancel
           </button>
         </form>
       </div>
