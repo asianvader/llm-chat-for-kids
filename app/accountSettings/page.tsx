@@ -1,14 +1,14 @@
 import { EditProfile } from "@/components/EditProfile";
+import Logout from "@/components/Logout";
 import React from "react";
 
 function accountSettings() {
   return (
     <div>
       <h2>Account Settings</h2>
-      <div className="grid md:grid-cols-2 sm:grid-cols-1">
+      <div className="grid grid-cols-1">
         <EditProfile />
-        <div>Edit pin</div>
-        <div>Log out</div>
+        <Logout />
       </div>
     </div>
   );
