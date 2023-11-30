@@ -4,15 +4,13 @@ import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { signOut } from "next-auth/react";
 
 function Logout() {
-
   return (
-    <div className="relative">
+    <div className="pr-5">
       <button
-        onClick={() => signOut({ callbackUrl: "/"})}
-        className="absolute bottom-0 left-0"
+        onClick={() => signOut({ callbackUrl: "/" })}
         aria-label="Log out"
       >
-        <ArrowLeftOnRectangleIcon className="h-14 w-14 text-gray-800 hover:text-gray-600" />
+        <ArrowLeftOnRectangleIcon className="h-10 w-10 text-white-800 hover:text-gray-400" />
       </button>
     </div>
   );

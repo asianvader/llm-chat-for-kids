@@ -14,13 +14,12 @@ export function EditProfile() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
-    console.log(userData, "useeffect");
     if (!userData) {
-      console.log("saving");
       const data = sessionStorage.getItem("userData");
       console.log(data);
       const profiles = data ? JSON.parse(data) : null;
       setUserData(profiles);
+      console.log(userData, "useeffect");
     }
   }, []);
 
@@ -77,12 +76,16 @@ export function EditProfile() {
           setShowDeleteModal={setShowDeleteModal}
         />
       )}
-      <h2>My kids</h2>
+
+      {userData?.length! > 0 ? (
+        <h2 className="text-center m-8 text-5xl font-semibold">My kids</h2>
+      ) : null}
+
       <div className="grid gap-4">
         {userData?.map((profile, index) => (
           <div
             key={profile.id}
-            className="border-2 border-gray-3
+            className="bg-white border-2 border-gray-3
               00 shadow rounded-md p-4 max-w-sm w-full mx-auto grid grid-cols-3 justify-items-stretch"
           >
             <div className="justify-self-center">
