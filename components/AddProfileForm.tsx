@@ -1,5 +1,4 @@
 "use client";
-
 import { useUserDataContext } from "@/app/Context/store";
 import { db } from "@/firebase";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -121,6 +120,7 @@ const AddProfileForm: FC<AddProfileModalProps> = ({
 
       updateDoc(profileRef, {
         id: document.id,
+        avatarUrl: `https://api.dicebear.com/7.x/thumbs/svg?seed=${name}`,
       });
 
       getDoc(profileRef).then((docSnapshot) => {

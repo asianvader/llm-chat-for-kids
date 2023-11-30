@@ -3,6 +3,7 @@ interface ProfileData {
   name: string;
   createAt?: admin.firestore.Timestamp;
   id: string;
+  avatarUrl: string;
 }
 
 type formProps = {

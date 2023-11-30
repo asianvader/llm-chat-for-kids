@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, MouseEvent } from "react";
-import Image from "next/image";
 import { DocumentData } from "firebase-admin/firestore";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import EditProfileModal from "./EditProfileModal";
@@ -89,8 +88,8 @@ export function EditProfile() {
               00 shadow rounded-md p-4 max-w-sm w-full mx-auto grid grid-cols-3 justify-items-stretch"
           >
             <div className="justify-self-center">
-              <Image
-                src={`/avatar${index + 1}.png`}
+              <img
+                src={profile.avatarUrl}
                 width={100}
                 height={100}
                 alt="avatar"
