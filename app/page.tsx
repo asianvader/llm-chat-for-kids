@@ -1,11 +1,6 @@
-"use client";
-
-import { useChat } from "ai/react";
 import FetchProfiles from "@/components/FetchProfiles";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
 
   return (
     <div
@@ -14,26 +9,7 @@ export default function Home() {
     >
       <FetchProfiles />
 
-      {/* <div>
-      {messages.map((m) => (
-        <div key={m.id}>
-          {m.role === "user" ? "User: " : "AI: "}
-          {m.content}
-        </div>
-      ))}
-
-      <form onSubmit={handleSubmit}>
-
-          <input
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Type you message here"
-            className="bg-transparent focus:outline-none flex-1"
-          />
-        <button type="submit">Send</button>
-      </form>
-    </div> */}
+     
     </div>
   );
 }

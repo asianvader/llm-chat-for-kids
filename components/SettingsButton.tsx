@@ -18,7 +18,7 @@ function SettingsButton() {
         onClick={settingsButtonOnClick}
         aria-label="Settings"
       >
-        <Cog6ToothIcon className="h-14 w-14 text-gray-800 hover:text-gray-600" />
+        <Cog6ToothIcon className="h-10 w-10 text-gray-800 hover:text-gray-600" />
       </button>
     </div>
   );
