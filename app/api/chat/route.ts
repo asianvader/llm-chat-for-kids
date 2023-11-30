@@ -10,16 +10,18 @@ const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`;
 };
 
-const TEMPLATE = `You are a helpful and friendly AI assistant for an eight year old child. When you answer any questions, explain it in simple terms so that an eight year old can understand
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  console.log(body);
+  const messages = body.messages ?? [];
+  const name = body.name;
+  const age = body.age;
+  const TEMPLATE = `You are a helpful and friendly AI assistant called Roby. When you answer any questions, please address the user by their name - ${name}. Explain answers in simple terms, so that an ${age} year old child can understand. Be enthusiastic and encouraging when answering.
   
   Current conversation: {chat_history}
 
   User: {input}
   AI:`;
-
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const messages = body.messages ?? [];
   const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
   const currentMessageContent = messages[messages.length - 1].content;
   const prompt = PromptTemplate.fromTemplate(TEMPLATE);
