@@ -11,23 +11,22 @@ function Chat() {
   const { userData, setUserData } = useUserDataContext();
   const [user, setUser] = useState<DocumentData | null>(null);
   const { messages, input, handleInputChange, handleSubmit } = useChat({
-    body: { name: user?.name, age: user?.age },
+    body: user || {},
   });
 
   const pathname = usePathname();
-  console.log("user", user);
-  console.log("messages", messages);
 
   useEffect(() => {
     const id = pathname.replace("/profile/", "");
     if (!userData) {
       const data = sessionStorage.getItem("userData");
-      console.log(data);
       const profiles = data ? JSON.parse(data) : null;
       setUserData(profiles);
       setUser(profiles?.find((user: DocumentData) => user.id === id));
     } else {
-      setUser(userData?.filter((user: DocumentData) => user.id === id));
+      const filteredProfile = userData?.filter((profile) => profile.id === id);
+      setUser(filteredProfile);
+      console.log("user", filteredProfile);
     }
   }, []);
 
@@ -41,7 +40,10 @@ function Chat() {
                 <div className="grid grid-cols-6 gap-4 my-2">
                   <div className="col-start-1 col-end-2 col-span-1 justify-self-end">
                     <img
-                      src={user?.avatarUrl}
+                      src={
+                        user?.avatarUrl ||
+                        `https://api.dicebear.com/7.x/thumbs/svg?seed=${user?.name}`
+                      }
                       width={50}
                       height={50}
                       alt="avatar"
@@ -77,7 +79,7 @@ function Chat() {
 
       <form
         onSubmit={handleSubmit}
-        className="px-8 py-8 mt-auto flex items-center"
+        className="px-8 py-8 mt-auto flex items-center sticky bottom-0 bg-white border-t-2 border-gray-200"
       >
         <input
           type="text"

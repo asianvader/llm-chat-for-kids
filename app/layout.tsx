@@ -5,7 +5,6 @@ import Login from "@/components/Login";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
 import { SessionProvider } from "@/components/SessionProvider";
-import SettingsButton from "@/components/SettingsButton";
 import { UserDataProvider } from "./Context/store";
 
 const playpenSans = Playpen_Sans({ subsets: ["latin"] });
@@ -31,7 +30,6 @@ export default async function RootLayout({
             <div className="">
               <UserDataProvider>
                 {children}
-                <SettingsButton />
               </UserDataProvider>
             </div>
           )}

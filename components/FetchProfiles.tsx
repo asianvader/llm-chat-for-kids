@@ -63,6 +63,9 @@ function FetchProfiles() {
     console.log(e.currentTarget);
     const profileId = (e.target as HTMLDivElement).dataset.profileId;
     console.log(profileId);
+    const profile = userData?.find((profile) => profile.id === profileId);
+    console.log('profile', profile)
+    sessionStorage.setItem("selectedProfile", JSON.stringify(profile));
     router.push(`/profile/${profileId}`);
   };
   return (
