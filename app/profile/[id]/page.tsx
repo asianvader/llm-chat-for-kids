@@ -3,9 +3,10 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { useChat } from "ai/react";
 import { useUserDataContext } from "../../Context/store";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DocumentData } from "firebase-admin/firestore";
 import Image from "next/image";
+import { set } from "firebase/database";
 
 function Chat() {
   const { userData, setUserData } = useUserDataContext();
@@ -13,6 +14,7 @@ function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     body: user || {},
   });
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
 
@@ -30,9 +32,20 @@ function Chat() {
     }
   }, []);
 
+  useEffect(() => {
+    if (messages.length) {
+      setTimeout(() => {
+        messagesRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      }, 1000);
+    }
+  }, [messages.length]);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="border-2 flex-grow bg-white p-8">
+    <div className="h-screen flex flex-col ">
+      <div className="border-2 max-h-screen flex-1 scroll-snap-y-container overflow-auto bg-white p-8">
         {messages.map((m) => (
           <div key={m.id} className="message-content">
             {m.role === "user" ? (
@@ -75,27 +88,30 @@ function Chat() {
             )}
           </div>
         ))}
+        <div className="message-end pb-[110px]" ref={messagesRef}></div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="px-8 py-8 mt-auto flex items-center sticky bottom-0 bg-white border-t-2 border-gray-200"
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Add your question here"
-          className="bg-white border-2 border-slate-400 p-4 rounded-md focus:outline-green-700 flex-1"
-        />
-        <button
-          disabled={!input}
-          type="submit"
-          className="mx-3 border-2 p-3 rounded-full border-green-700 bg-green-700/20 hover:border-green-700/50 disabled:cursor-not-allowed disabled:bg-gray-200"
+      <div className="sticky bottom-0 ">
+        <form
+          onSubmit={handleSubmit}
+          className="px-8 py-8 mt-auto flex items-center  bg-white border-t-2 border-gray-200"
         >
-          <PaperAirplaneIcon className="h-6 w-6 text-green-700/80" />
-        </button>
-      </form>
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Add your question here"
+            className="bg-white border-2 border-slate-400 p-4 rounded-md focus:outline-green-700 flex-1"
+          />
+          <button
+            disabled={!input}
+            type="submit"
+            className="mx-3 border-2 p-3 rounded-full border-green-700 bg-green-700/20 hover:border-green-700/50 disabled:cursor-not-allowed disabled:bg-gray-200"
+          >
+            <PaperAirplaneIcon className="h-6 w-6 text-green-700/80" />
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
