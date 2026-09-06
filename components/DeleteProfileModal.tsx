@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, MouseEvent as ReactMouseEvent, useEffect } from "react";
 import { db } from "@/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
@@ -21,29 +21,25 @@ const DeleteProfileModal: FC<DeleteProfileModalProps> = ({
   const { userData, setUserData } = useUserDataContext();
   const profile = user[0];
   const { data: session } = useSession();
-  const modalClasses = showDeleteModal
-    ? "fixed inset-0 flex items-center justify-center"
-    : "hidden";
+  const modalClasses = showDeleteModal ? "modal-overlay" : "hidden";
 
   useEffect(() => {
-    // Attach the event listener when the modal is shown
-    if (showDeleteModal) {
-      document.addEventListener("click", closeModalOnOverlayClick);
-    }
-
-    // Detach the event listener when the modal is hidden or component unmounts
-    return () => {
-      document.removeEventListener("click", closeModalOnOverlayClick);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowDeleteModal(false);
     };
-  }, [showDeleteModal]);
+    if (showDeleteModal) document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showDeleteModal, setShowDeleteModal]);
 
   /**
    * Closes the delete profile modal when the overlay is clicked.
    * @param {MouseEvent} e - The click event.
    */
-  const closeModalOnOverlayClick = (e: MouseEvent) => {
+  const closeModalOnOverlayClick = (e: ReactMouseEvent<HTMLDivElement>) => {
     // Check if the click event is on the overlay
-    if ((e.target as HTMLDivElement).classList.contains("bg-gray-800")) {
+    if ((e.target as HTMLDivElement).classList.contains("modal-overlay")) {
       setShowDeleteModal(false);
     }
   };
@@ -81,38 +77,39 @@ const DeleteProfileModal: FC<DeleteProfileModalProps> = ({
   };
 
   return (
-    <div className={`${modalClasses} bg-gray-800 bg-opacity-75`}>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className={modalClasses} role="presentation" onMouseDown={closeModalOnOverlayClick}>
+      <div className="roby-card w-full max-w-md p-6 sm:p-8" role="dialog" aria-modal="true">
         <div className="relative">
           <button
-            className="absolute top-0 right-0"
+            className="roby-icon-button absolute right-0 top-0"
+            aria-label="Close"
             onClick={() => {
               setShowDeleteModal(false);
             }}
           >
             {" "}
-            <XMarkIcon className="h-10 w-10 text-red-600 hover:text-red-600/80" />
+            <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
-        <div className="mt-12 mb-10 mr-10">
-          <p className="font-semibold text-lg">
+        <div className="mb-8 mt-10">
+          <p className="text-lg font-bold">
             Are you sure you want to delete {profile.name}&apos;s profile?
           </p>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-end gap-3">
           <button
-            className="bg-red-600 hover:bg-red-600/80 text-white font-bold rounded px-4 py-2 mr-2"
+            className="roby-button roby-button-coral"
             onClick={confirmDeleteHandler}
           >
-            Yes
+            Delete profile
           </button>
           <button
-            className="bg-gray-600 hover:bg-gray-600/80 text-white font-bold py-2 px-4 rounded"
+            className="roby-button roby-button-quiet"
             onClick={() => {
               setShowDeleteModal(false);
             }}
           >
-            No
+            Keep it
           </button>
         </div>
       </div>

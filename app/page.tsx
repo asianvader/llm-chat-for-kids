@@ -4,12 +4,9 @@ import SettingsButton from "@/components/SettingsButton";
 export default function Home() {
 
   return (
-    <div
-      className="bg-fixed bg-repeat min-h-screen pb-8"
-      style={{ backgroundImage: `url("/background.png")` }}
-    >
+    <main className="roby-page">
       <FetchProfiles />
       <SettingsButton />     
-    </div>
+    </main>
   );
 }

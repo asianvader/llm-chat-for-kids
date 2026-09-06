@@ -77,44 +77,44 @@ export function EditProfile() {
       )}
 
       {userData?.length! > 0 ? (
-        <h2 className="text-center m-8 text-5xl font-semibold">My kids</h2>
+        <h2 className="mt-8 text-center text-3xl font-black sm:text-4xl">Your kids</h2>
       ) : null}
 
-      <div className="grid gap-4">
+      <div className="mx-auto mt-6 grid max-w-2xl gap-4">
         {userData?.map((profile, index) => (
           <div
             key={profile.id}
-            className="bg-white border-2 border-gray-3
-              00 shadow rounded-md p-4 max-w-sm w-full mx-auto grid grid-cols-3 justify-items-stretch"
+            className="roby-card grid w-full grid-cols-[auto_1fr_auto] items-center gap-4 p-4 sm:p-5"
           >
             <div className="justify-self-center">
               <img
                 src={profile.avatarUrl}
-                width={100}
-                height={100}
-                alt="avatar"
+                width={76}
+                height={76}
+                alt={`${profile.name}'s avatar`}
+                className="h-16 w-16 rounded-full bg-[#e4f5ff] sm:h-20 sm:w-20"
               />
             </div>
-            <div className="grid grid-rows-2">
-              <p className="flex items-center justify-center">{profile.name}</p>
-              <p className="flex items-center justify-center">
-                Age: {profile.age}
-              </p>
+            <div>
+              <p className="text-xl font-black">{profile.name}</p>
+              <p className="mt-1 font-bold text-[var(--muted-ink)]">Age {profile.age}</p>
             </div>
-            <div className="grid">
+            <div className="flex gap-1">
               <button
                 id={profile.id}
                 onClick={editOnClickHandler}
-                className="flex items-center justify-end"
+                className="roby-icon-button"
+                aria-label={`Edit ${profile.name}'s profile`}
               >
-                <PencilIcon className="h-8 w-8 text-gray-800" />
+                <PencilIcon className="h-5 w-5" />
               </button>
               <button
-                className="flex items-center justify-end"
+                className="roby-icon-button text-[#c64d47] hover:bg-[#fff0ee]"
                 onClick={deleteProfileHandler}
                 id={profile.id}
+                aria-label={`Delete ${profile.name}'s profile`}
               >
-                <TrashIcon className="h-8 w-8 text-red-600" />
+                <TrashIcon className="h-5 w-5" />
               </button>
             </div>
           </div>

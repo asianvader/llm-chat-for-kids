@@ -2,16 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+:root { --ink: #24314d; --muted-ink: #60708e; --cream: #fffaf0; --sun: #ffc857; --coral: #f56d5d; --sky: #5da9e9; --teal: #2daea0; --navy: #2a527d; --line: #dce8f2; }
+* { box-sizing: border-box; }
+html { background: var(--cream); }
+body { color: var(--ink); background: var(--cream); min-height: 100vh; }
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+@layer components {
+  .roby-page { min-height: 100vh; background-color: var(--cream); background-image: radial-gradient(circle at 8% 8%, rgba(255, 200, 87, .28) 0 4rem, transparent 4.1rem), radial-gradient(circle at 92% 18%, rgba(93, 169, 233, .16) 0 7rem, transparent 7.1rem); }
+  .roby-shell { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+  .roby-card { border: 2px solid var(--line); border-radius: 1.75rem; background: rgba(255,255,255,.94); box-shadow: 0 14px 34px rgba(42,82,125,.12); }
+  .roby-button { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; gap: .5rem; border-radius: 9999px; padding: .7rem 1.25rem; font-weight: 800; transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease; }
+  .roby-button:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(42,82,125,.18); }
+  .roby-button:focus-visible, .roby-icon-button:focus-visible, .roby-input:focus-visible, .profile-card:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+  .roby-button:disabled { cursor: not-allowed; transform: none; box-shadow: none; opacity: .55; }
+  .roby-button-primary { background: var(--teal); color: white; } .roby-button-coral { background: var(--coral); color: white; } .roby-button-quiet { background: #edf5fb; color: var(--navy); }
+  .roby-icon-button { display: inline-grid; min-width: 2.75rem; min-height: 2.75rem; place-items: center; border-radius: 9999px; color: var(--navy); transition: background-color .18s ease, transform .18s ease; }
+  .roby-icon-button:hover { background: #eaf4fb; transform: translateY(-1px); }
+  .roby-input { width: 100%; border: 2px solid #c8ddec; border-radius: 1rem; background: white; padding: .75rem 1rem; color: var(--ink); }
+  .roby-input::placeholder { color: #8a9ab2; } .roby-input:focus { border-color: var(--sky); outline: none; }
+  .modal-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 1rem; background: rgba(36,49,77,.55); backdrop-filter: blur(4px); }
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }

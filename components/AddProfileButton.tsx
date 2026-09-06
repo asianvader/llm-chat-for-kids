@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
 type AddProfileButtonProps = {
   setShowModal: (showModal: boolean) => void;
@@ -11,12 +12,12 @@ const AddProfileButton: FC<AddProfileButtonProps> = ({ setShowModal }) => {
     setShowModal(true);
   };
   return (
-    <div className="flex items-center justify-center pt-6 ">
+    <div className="flex items-center justify-center pt-6">
       <button
-        className=" bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"
+        className="roby-button roby-button-primary mt-2"
         onClick={handleOnClick}
       >
-        Add new profile
+        <PlusIcon className="h-5 w-5" /> Add a profile
       </button>
     </div>
   );

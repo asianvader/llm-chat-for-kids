@@ -12,13 +12,13 @@ function SettingsButton() {
     router.push("/accountSettings");
   };
   return (
-    <div className="relative">
+    <div className="fixed bottom-5 right-5 z-20">
       <button
-        className="absolute bottom-0 right-0"
+        className="roby-icon-button bg-white shadow-lg"
         onClick={settingsButtonOnClick}
         aria-label="Settings"
       >
-        <Cog6ToothIcon className="h-10 w-10 text-gray-800 hover:text-gray-600" />
+        <Cog6ToothIcon className="h-7 w-7" />
       </button>
     </div>
   );

@@ -5,12 +5,13 @@ import { signOut } from "next-auth/react";
 
 function Logout() {
   return (
-    <div className="pr-5">
+    <div>
       <button
         onClick={() => signOut({ callbackUrl: "/" })}
         aria-label="Log out"
+        className="roby-icon-button text-white hover:bg-white/15"
       >
-        <ArrowLeftOnRectangleIcon className="h-10 w-10 text-white-800 hover:text-gray-400" />
+        <ArrowLeftOnRectangleIcon className="h-6 w-6" />
       </button>
     </div>
   );

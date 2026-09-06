@@ -9,20 +9,21 @@ import React from "react";
 function AccountSettings() {
   const router = useRouter();
   return (
-    <div className="bg-yellow-200 min-h-screen flex flex-col">
-      <header className="bg-blue-800 text-white pt-4 pl-5 pb-2 sticky top-0 z-10 flex justify-between shadow-md">
-        <button aria-label="Navigate back" onClick={() => router.back()}>
-          <ArrowLeftIcon className="h-8 w-8 text-white-800 hover:text-gray-400" />
+    <main className="roby-page min-h-screen">
+      <header className="sticky top-0 z-10 border-b border-white/20 bg-[#2a527d] text-white shadow-md">
+        <div className="roby-shell flex min-h-16 items-center justify-between gap-4">
+        <button className="roby-icon-button text-white hover:bg-white/15" aria-label="Navigate back" onClick={() => router.back()}>
+          <ArrowLeftIcon className="h-6 w-6" />
         </button>
-
-        <h2 className="text-2xl font-semibold">Account Settings</h2>
+        <h1 className="text-lg font-black sm:text-2xl">Parent settings</h1>
         <Logout />
+        </div>
       </header>
-
-      <div className="grid grid-cols-1">
+      <div className="roby-shell py-8 sm:py-12">
+        <p className="text-center font-bold text-[var(--muted-ink)]">Manage the profiles in your family&apos;s clubhouse.</p>
         <EditProfile />
       </div>
-    </div>
+    </main>
   );
 }
 
