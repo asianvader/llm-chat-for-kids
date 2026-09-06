@@ -3,7 +3,7 @@ import { FC, useEffect } from "react";
 import { db } from "@/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { DocumentData } from "firebase-admin/firestore";
+import { DocumentData } from "firebase/firestore";
 import { useUserDataContext } from "@/app/Context/store";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -96,7 +96,7 @@ const DeleteProfileModal: FC<DeleteProfileModalProps> = ({
         </div>
         <div className="mt-12 mb-10 mr-10">
           <p className="font-semibold text-lg">
-            Are you sure you want to delete {profile.name}'s profile?
+            Are you sure you want to delete {profile.name}&apos;s profile?
           </p>
         </div>
         <div className="flex justify-center">

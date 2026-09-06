@@ -12,7 +12,7 @@ import {
   SetStateAction,
   useState
 } from "react";
-import { DocumentData } from "firebase-admin/firestore";
+import { DocumentData } from "firebase/firestore";
 
 type ContextProps = {
   userData: DocumentData[] | null;

@@ -1,51 +1,123 @@
 "use client";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { useChat } from "ai/react";
 import { useUserDataContext } from "../../Context/store";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { DocumentData } from "firebase-admin/firestore";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { set } from "firebase/database";
+
+type ChatMessage = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+};
 
 function Chat() {
   const { userData, setUserData } = useUserDataContext();
-  const [user, setUser] = useState<DocumentData | null>(null);
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    body: user || {},
-  });
-  const messagesRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<ProfileData | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const pathname = usePathname();
 
   useEffect(() => {
     const id = pathname.replace("/profile/", "");
-    if (!userData) {
-      const data = sessionStorage.getItem("userData");
-      const profiles = data ? JSON.parse(data) : null;
+    const storedData = sessionStorage.getItem("userData");
+    const profiles = userData ?? (storedData ? JSON.parse(storedData) : null);
+
+    if (!userData && profiles) {
       setUserData(profiles);
-      setUser(profiles?.find((user: DocumentData) => user.id === id));
-    } else {
-      const filteredProfile = userData?.filter((profile) => profile.id === id);
-      setUser(filteredProfile);
-      console.log("user", filteredProfile);
     }
-  }, []);
+
+    setUser(
+      profiles?.find((profile: ProfileData) => profile.id === id) ?? null
+    );
+  }, [pathname, setUserData, userData]);
 
   useEffect(() => {
-    if (messages.length) {
-      setTimeout(() => {
-        messagesRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }, 1000);
+    const frame = requestAnimationFrame(() => {
+      const scrollContainer = scrollContainerRef.current;
+      scrollContainer?.scrollTo({
+        top: scrollContainer.scrollHeight,
+        behavior: "smooth",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [messages]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const question = input.trim();
+
+    if (!question || !user || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: question,
+    };
+    const assistantId = crypto.randomUUID();
+    const nextMessages = [...messages, userMessage];
+
+    setMessages(nextMessages);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages.map(({ role, content }) => ({ role, content })),
+          profile: { name: user.name, age: user.age },
+        }),
+      });
+
+      if (!response.ok || !response.body) {
+        throw new Error("The chat request failed.");
+      }
+
+      setMessages((current) => [
+        ...current,
+        { id: assistantId, role: "assistant", content: "" },
+      ]);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === assistantId
+              ? { ...message, content: message.content + chunk }
+              : message
+          )
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      setMessages((current) => [
+        ...current.filter((message) => message.id !== assistantId),
+        {
+          id: assistantId,
+          role: "assistant",
+          content: "Sorry, I couldn't answer that just now. Please try again.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [messages.length]);
+  };
 
   return (
     <div className="h-screen flex flex-col ">
-      <div className="border-2 max-h-screen flex-1 scroll-snap-y-container overflow-auto bg-white p-8">
+      <div className="border-2 max-h-screen flex-1 scroll-snap-y-container overflow-auto bg-white p-8 message-container" ref={scrollContainerRef}>
         {messages.map((m) => (
           <div key={m.id} className="message-content">
             {m.role === "user" ? (
@@ -71,7 +143,7 @@ function Chat() {
             ) : (
               <>
                 <div className="grid grid-cols-6 gap-4 my-2">
-                  <div className="col-start-3 col-end-6 border-2 shadow-md rounded pl-2 bg-yellow-50 py-3">
+                  <div className={`col-start-3 col-end-6 border-2 shadow-md rounded pl-2 bg-yellow-50 py-3 ai-message-content-${messages.length}`}>
                     {m.content}
                   </div>
                   <div className="col-start-6 col-end-7 col-span-1 border-1 border-green-500">
@@ -88,7 +160,7 @@ function Chat() {
             )}
           </div>
         ))}
-        <div className="message-end pb-[110px]" ref={messagesRef}></div>
+        <div className="message-end pb-[110px]"></div>
       </div>
 
       <div className="sticky bottom-0 ">
@@ -99,12 +171,12 @@ function Chat() {
           <input
             type="text"
             value={input}
-            onChange={handleInputChange}
+            onChange={(event) => setInput(event.target.value)}
             placeholder="Add your question here"
             className="bg-white border-2 border-slate-400 p-4 rounded-md focus:outline-green-700 flex-1"
           />
           <button
-            disabled={!input}
+            disabled={!input.trim() || !user || isLoading}
             type="submit"
             className="mx-3 border-2 p-3 rounded-full border-green-700 bg-green-700/20 hover:border-green-700/50 disabled:cursor-not-allowed disabled:bg-gray-200"
           >

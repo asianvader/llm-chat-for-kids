@@ -3,7 +3,7 @@ import { FC, FormEvent, useEffect, useState } from "react";
 import { db } from "@/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { DocumentData } from "firebase-admin/firestore";
+import { DocumentData } from "firebase/firestore";
 import { useUserDataContext } from "@/app/Context/store";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -154,7 +154,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           onSubmit={handleSubmit}
         >
           <h2 className="text-xl font-bold mb-6 text-center">
-            Edit {profile.name}'s profile
+            Edit {profile.name}&apos;s profile
           </h2>
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

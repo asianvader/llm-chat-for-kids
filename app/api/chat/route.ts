@@ -1,44 +1,57 @@
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
+import OpenAI from "openai";
 import { NextRequest } from "next/server";
-import { PromptTemplate } from "langchain/prompts";
-import { BytesOutputParser } from "langchain/schema/output_parser";
 
-export const runtime = "edge";
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-const formatMessage = (message: VercelChatMessage) => {
-  return `${message.role}: ${message.content}`;
+type ChatRequest = {
+  messages?: ChatMessage[];
+  profile?: {
+    name?: string;
+    age?: string;
+  };
 };
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  console.log(body);
-  const messages = body.messages ?? [];
-  const name = body[0].name;
-  const age = body[0].age;
+  const { messages = [], profile = {} } = (await request.json()) as ChatRequest;
+  const name = profile.name?.trim() || "friend";
+  const age = profile.age?.trim() || "young";
 
-  const TEMPLATE = `You are a helpful and friendly AI assistant called Roby. When you answer any questions, please address the user by their name - ${name}. Explain answers in simple terms, so that an ${age} year old child can understand. Be enthusiastic and encouraging when answering. If asked "what is my name?", answer with the user's name. If asked "how old am I?" ${name} is ${age} years old.
-  
-  Current conversation: {chat_history}
+  if (!messages.length) {
+    return Response.json({ error: "At least one message is required." }, { status: 400 });
+  }
 
-  User: {input}
-  AI:`;
-  const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
-  const currentMessageContent = messages[messages.length - 1].content;
-  const prompt = PromptTemplate.fromTemplate(TEMPLATE);
-
-  const model = new ChatOpenAI({
-    temperature: 0.7,
+  const openai = new OpenAI();
+  const stream = await openai.responses.create({
+    model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+    instructions: `You are a helpful and friendly AI assistant called Roby. Address the child by their name, ${name}. Explain answers simply enough for a ${age}-year-old child. Be enthusiastic and encouraging. If asked for the child's name or age, answer using this profile information. Keep responses age-appropriate and safe.`,
+    input: messages.map(({ role, content }) => ({ role, content })),
+    stream: true,
   });
 
-  const outputParser = new BytesOutputParser();
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const encoder = new TextEncoder();
 
-  const chain = prompt.pipe(model).pipe(outputParser);
-
-  const stream = await chain.stream({
-    chat_history: formattedPreviousMessages.join("\n"),
-    input: currentMessageContent,
+      try {
+        for await (const event of stream) {
+          if (event.type === "response.output_text.delta") {
+            controller.enqueue(encoder.encode(event.delta));
+          }
+        }
+        controller.close();
+      } catch (error) {
+        controller.error(error);
+      }
+    },
   });
 
-  return new StreamingTextResponse(stream);
+  return new Response(body, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+    },
+  });
 }

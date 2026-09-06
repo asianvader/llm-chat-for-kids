@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-function accountSettings() {
+function AccountSettings() {
   const router = useRouter();
   return (
     <div className="bg-yellow-200 min-h-screen flex flex-col">
@@ -26,4 +26,4 @@ function accountSettings() {
   );
 }
 
-export default accountSettings;
+export default AccountSettings;

@@ -1,0 +1,7 @@
+allowBuilds:
+  '@firebase/util': true
+  protobufjs: true
+  unrs-resolver: true
+overrides:
+  postcss: '>=8.5.23 <9'
+  undici: '>=6.28.0 <7'

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import AddProfileButton from "./AddProfileButton";
 import { fetchProfileData } from "@/app/utils/getProfiles";
 import { useUserDataContext } from "@/app/Context/store";
-import { DocumentData } from "firebase-admin/firestore";
+import { DocumentData } from "firebase/firestore";
 import AddProfileForm from "./AddProfileForm";
 
 function FetchProfiles() {
