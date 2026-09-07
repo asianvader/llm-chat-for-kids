@@ -86,7 +86,7 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next.map(({ role, content }) => ({ role, content })), profile: { name: user.name, age: user.age } }) });
+      const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next.map(({ role, content }) => ({ role, content })), profile: { id: user.id, name: user.name, age: user.age } }) });
       if (!response.ok || !response.body) throw new Error("The chat request failed.");
       setMessages((current) => [...current, { id: assistantId, role: "assistant", content: "" }]);
       const reader = response.body.getReader();
