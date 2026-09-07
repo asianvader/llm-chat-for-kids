@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Roby
 
-## Getting Started
+Roby is a child-friendly AI chat app. Parents sign in with Google, manage child profiles, and children can chat with Roby or listen to replies read aloud.
 
-First, run the development server:
+## Stack
+
+- **Framework:** Next.js 15 (App Router), React 19, and TypeScript
+- **Styling:** Tailwind CSS 3
+- **Authentication:** NextAuth with Google sign-in
+- **Data:** Firebase and Cloud Firestore for child profiles
+- **AI:** OpenAI Responses API with streamed chat replies
+- **Speech:** ElevenLabs text-to-speech for Roby's Listen feature
+- **Tooling:** pnpm, ESLint, and Volta-pinned Node.js
+
+## Setup
+
+Requires Node `22.23.2` (pinned with Volta) and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set the required values in `.env.local` (do not commit this file):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4.1-mini
+ELEVENLABS_API_KEY=
+ELEVENLABS_VOICE_ID=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Firebase configuration is also required; see `firebase.ts` for the expected client configuration.
 
-## Learn More
+## Commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Chat responses stream from the OpenAI Responses API.
+- The Listen button uses a server-side ElevenLabs route, so the API key stays private.
